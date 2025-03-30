@@ -120,7 +120,7 @@ As of version v0.3, you are required to provide metadata for the plugin. Here is
 ```
 
 ## 🎨 Creating Your Own Theme
-Create a file with a name ending in `.theme.css` and write your CSS modifications there. You can use the devtools (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>`) to find an element's class name, etc.
+Create a file with a name ending in `.theme.css` and write your CSS modifications there. You can use the devtools (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>) to find an element's class name, etc.
 
 *You are also required to provide metadata in your theme, in the same way as plugins.*
 
@@ -136,7 +136,7 @@ If you'd like to go the extra mile, you can also support me by sponsoring the pr
 
 ## 📊 Repository Stats
 
-![Alt](https://repobeats.axiom.co/api/embed/ffcb702620c8a5356a655a21e58442be5648de67.svg "Repobeats analytics image")
+![Repo Stats](https://repobeats.axiom.co/api/embed/ffcb702620c8a5356a655a21e58442be5648de67.svg "Repobeats analytics image")
 
 ## 🚨 Important Notice
 **This project is not affiliated in any way with Stremio.**
