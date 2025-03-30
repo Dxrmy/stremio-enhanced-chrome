@@ -5,6 +5,9 @@
 	<h1 align="center">Stremio Enhanced</h1>
 	<p align="center">
 		<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/REVENGE977/stremio-enhanced/total?style=for-the-badge&color=%237B5BF5">
+		<a href="https://github.com/REVENGE977/stremio-enhanced/stargazers">
+			<img src="https://img.shields.io/github/stars/REVENGE977/stremio-enhanced.svg?style=for-the-badge&color=%237B5BF5" alt="stargazers">
+		</a>
 		<a href="https://github.com/REVENGE977/stremio-enhanced-community/releases/latest">
 			<img src="https://img.shields.io/github/v/release/REVENGE977/stremio-enhanced?label=Latest%20Release&style=for-the-badge&color=%237B5BF5" alt="Latest Version">
 		</a>
