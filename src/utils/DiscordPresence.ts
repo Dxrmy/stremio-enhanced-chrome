@@ -1,57 +1,88 @@
-import DiscordRPC from 'discord-rpc';
+import { Client as DiscordClient } from '@xhayper/discord-rpc';
 import { getLogger } from './logger';
 import Helpers from './Helpers';
-import { ipcRenderer } from "electron";
+import { ActivityType } from 'discord-api-types/v10';
+import type { SetActivity } from '@xhayper/discord-rpc/dist/structures/ClientUser';
 
 class DiscordPresence {
     private static logger = getLogger("DiscordPresence");
-    private static rpc:DiscordRPC.Client;
-    public static started:boolean = false;
+    private static rpc: DiscordClient | null = null;
+    private static enabled: boolean = false;
+    private static reconnectInterval: number = 10000;
+    private static clientId: string = "1200186750727893164";
+
     public static start() {
-        try {
-            const clientId = '1200186750727893164';
-            DiscordRPC.register(clientId);
-            
-            this.rpc = new DiscordRPC.Client({ transport: 'ipc' });
+        if(this.enabled) return;
+        this.enabled = true;
+        this.connect();
+    }
+
+    private static connect() {
+        if(!this.enabled) return;
+        try {            
+            this.rpc = new DiscordClient({ clientId: this.clientId });
+
             this.rpc.on('ready', () => {
                 this.logger.info('Connected to DiscordRPC.');
-                this.updateActivity({
-                    details: "Home",
-                    largeImageKey: '1024stremio',
-                    largeImageText: 'Stremio',
-                    smallImageKey: "menuburger",
-                    smallImageText: "Main Menu",
-                    instance: false,
-                })
+                this.handleNavigation();
+            });
+
+            this.rpc.on('disconnected', () => {
+                this.logger.warn(`DiscordRPC Disconnected! Attempting to reconnect in ${this.reconnectInterval}ms...`);
+                this.handleReconnect();
             });
             
-            this.started = true;
-            this.rpc.login({ clientId }).catch(() => this.logger.error("Failed to connect to DiscordRPC, maybe Discord isn't running."));
-        }catch(_) {}
+            this.rpc.login().catch(() => {
+                this.logger.error("Failed to connect to DiscordRPC, maybe Discord isn't running.")
+                this.handleReconnect();
+            });
+        } catch (error) {
+            this.logger.error("An unexpected error occurred while starting Discord RPC:" + error);
+            this.handleReconnect();
+        }
     }
+
+    private static handleReconnect() {
+        if (!this.enabled) return; 
     
-    public static updateActivity(newActivity: DiscordRPC.Presence) {
-        try {
-            this.rpc.setActivity(newActivity);                
-        }catch(_) {}
+        setTimeout(() => {
+            this.logger.info("Reconnecting to DiscordRPC...");
+            this.connect();
+        }, this.reconnectInterval);
     }
-    
+
     public static stop() {
-        this.logger.info('Clearing DiscordRPC.');
-        this.rpc.clearActivity();
-        this.rpc.destroy();
-        this.started = false;
+        if(!this.enabled) return;
+        this.enabled = false;
+
+        if(this.rpc) {
+            this.logger.info('Clearing DiscordRPC.');
+            this.rpc.user.clearActivity();
+            this.rpc.destroy();
+        }
+
+        window.removeEventListener('hashchange', this.handleNavigation);
+    }
+
+    public static updateActivity(newActivity: SetActivity) {
+        if(!this.rpc || !this.enabled) return;
+
+        this.rpc.user.setActivity(newActivity).catch((error) => {
+            this.logger.error("Failed to set Discord activity:" + error);
+        });                
     }
     
     public static async discordRPCHandler() {
-        const handleNavigation = () => {            
-            this.checkWatching();
-            this.checkExploring();
-            this.checkMainMenu();
-        };
-
-        window.addEventListener('hashchange', handleNavigation);
+        window.addEventListener('hashchange', this.handleNavigation);
     }
+
+    private static handleNavigation = () => {
+        if(!this.enabled || !this.rpc) return;    
+
+        this.checkWatching();
+        this.checkExploring();
+        this.checkMainMenu();
+    };
     
     private static async checkWatching() {
         if(location.href.includes('#/player')) {
@@ -71,23 +102,28 @@ class DiscordPresence {
                     let endTimestamp = startTimestamp + Math.floor(video.duration);
                     
                     if(mediaType == "series") {
-                        let seriesInfoDetails = (await this.getPlayerState()).seriesInfoDetails;
-                        let episode = seriesInfoDetails.episode;
-                        let season = seriesInfoDetails.season; 
+                        const playerState = (await this.getPlayerState());
+                        let seriesInfoDetails = playerState.seriesInfoDetails;
+                        let metaInfo = playerState.metaDetails;
 
-                        ipcRenderer.send("discordrpc-update", { 
-                            details: `${mediaName} (S${season}E${episode})`, 
-                            state: 'Watching', 
+                        let episode = seriesInfoDetails.episode;
+                        let season = seriesInfoDetails.season;
+                        let isKitsu = metaInfo.id.startsWith("kitsu:");
+
+                        this.updateActivity({ 
+                            details: mediaName, 
+                            state: "Watching " + (!isKitsu ? `S${season} E${episode}` : `E${episode}`), 
                             startTimestamp,
                             endTimestamp,
                             largeImageKey: mediaPoster ?? "1024stremio",
                             largeImageText: "Stremio Enhanced",
                             smallImageKey: "play",
                             smallImageText: "Playing..",
-                            instance: false
+                            instance: false,
+                            type: ActivityType.Watching
                         }); 
                     } else if(mediaType == "movie") {
-                        ipcRenderer.send("discordrpc-update", { 
+                        this.updateActivity({ 
                             details: mediaName, 
                             state: 'Watching',
                             startTimestamp,
@@ -96,35 +132,42 @@ class DiscordPresence {
                             largeImageText: "Stremio Enhanced",
                             smallImageKey: "play",
                             smallImageText: "Playing..",
-                            instance: false
+                            instance: false,
+                            type: ActivityType.Watching
                         }); 
                     }
                 };
                 
                 const handlePausing = async () => {
                     if(mediaType == "series") {
-                        let seriesInfoDetails = (await this.getPlayerState()).seriesInfoDetails;
-                        let episode = seriesInfoDetails.episode;
-                        let season = seriesInfoDetails.season; 
+                        const playerState = (await this.getPlayerState());
+                        let metaInfo = playerState.metaDetails;
+                        let seriesInfoDetails = playerState.seriesInfoDetails;
 
-                        ipcRenderer.send("discordrpc-update", { 
-                            details: `${mediaName} (S${season}E${episode})`, 
-                            state: `Paused at ${Helpers.formatTime(video.currentTime)}`, 
+                        let episode = seriesInfoDetails.episode;
+                        let season = seriesInfoDetails.season;
+                        let isKitsu = metaInfo.id.startsWith("kitsu:");
+
+                        this.updateActivity({
+                            details: mediaName, 
+                            state: `Paused at ${Helpers.formatTime(video.currentTime)} in ${!isKitsu ? `S${season} E${episode}` : `E${episode}`}`, 
                             largeImageKey: mediaPoster,
                             largeImageText: "Stremio Enhanced",
                             smallImageKey: "pause",
                             smallImageText: "Paused",
-                            instance: false
+                            instance: false,
+                            type: ActivityType.Watching
                         }); 
                     } else if(mediaType == "movie") {
-                        ipcRenderer.send("discordrpc-update", { 
+                        this.updateActivity({ 
                             details: mediaName,
                             state: `Paused at ${Helpers.formatTime(video.currentTime)}`, 
                             largeImageKey: mediaPoster ?? "1024stremio",
                             largeImageText: "Stremio Enhanced",
                             smallImageKey: "pause",
                             smallImageText: "Paused",
-                            instance: false
+                            instance: false,
+                            type: ActivityType.Watching
                         }); 
                     }
                 }
@@ -146,14 +189,15 @@ class DiscordPresence {
                     let mediaName = metaDetails.name;
                     let mediaPoster = metaDetails.poster;
                                             
-                    ipcRenderer.send("discordrpc-update", { 
+                    this.updateActivity({ 
                         details: mediaName,
                         state: 'Exploring',
                         largeImageKey: mediaPoster ?? "1024stremio",
                         largeImageText: "Stremio Enhanced",
                         smallImageKey: "menuburger",
                         smallImageText: "Main Menu",
-                        instance: false
+                        instance: false,
+                        type: ActivityType.Playing
                     });
                 })
             })
@@ -161,13 +205,14 @@ class DiscordPresence {
     }
     
     private static checkMainMenu() {
-        let activityDetails = {
+        let activityDetails: SetActivity = {
             details: "",
             largeImageKey: "1024stremio",
             largeImageText: "Stremio Enhanced",
             smallImageKey: "menuburger",
             smallImageText: "Main Menu",
-            instance: false
+            instance: false,
+            type: ActivityType.Playing
         };
     
         switch (location.hash) {
@@ -200,7 +245,7 @@ class DiscordPresence {
                 return;
         }
     
-        ipcRenderer.send("discordrpc-update", activityDetails);
+        this.updateActivity(activityDetails);
     };
     
     private static async getMetaDetails() {
@@ -234,7 +279,7 @@ class DiscordPresence {
                 playerState = await Helpers._eval('core.transport.getState(\'player\')');
                 
                 if (playerState.seriesInfo && playerState.metaItem?.content) {
-                break;  // Data is available, break out of the loop
+                    break;  // Data is available, break out of the loop
                 }
             } catch (err) {
                 console.error('Error fetching player state:', err);

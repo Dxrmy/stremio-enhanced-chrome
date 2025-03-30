@@ -6,9 +6,13 @@
   - [x] Fixing about category
   - [x] Fixing Discord Rich Presence implementation to work with v5
   - [x] Plugin/theme update reimplementation
-- [ ] Create more plugins/themes?
-  - AniSkip integration for autoskipping segments such as intros and outros in anime.
+- [] AniSkip integration for autoskipping segments such as intros and outros in anime.
+  -  [x] Recognize anime by finding its ID on MyAnimeList using the title
+  -  [x] Show modal for skipping/ignoring the skip
+  -  [x] Add layers to seekbar to show where skip segments (openings/endings) are
+  -  [ ] Add UI for upvote/downvote skip segments
+  -  [ ] Add UI for submitting skip segments
+- [x] Make it so if the user opens Discord after opening Stremio Enhanced, Discord Rich Presence still works.
+- [x] In-app patch notes when an update is available.
 - [ ] Improve Update system: auto update so user doesn't have to download anything manually.
 - [ ] Support addons links by opening directly: instead of having the user copy and paste links.
-- [ ] Make it so if the user opens Discord after opening Stremio Enhanced, Discord Rich Presence still works.
-- [ ] In-app patch notes when an update is available.

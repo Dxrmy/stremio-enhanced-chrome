@@ -3,3 +3,4 @@ dist
 stremio-enhanced-win32-x64
 release-builds
 package-lock.json
+.vscode

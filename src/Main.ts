@@ -4,7 +4,6 @@ import { mkdirSync, existsSync } from "fs";
 import helpers from './utils/Helpers';
 import Updater from "./core/Updater";
 import Properties from "./core/Properties";
-import DiscordPresence from "./utils/DiscordPresence";
 import logger from "./utils/logger";
 import StremioService from "./utils/StremioService";
 
@@ -44,20 +43,6 @@ async function createWindow() {
         await Updater.checkForUpdates(true);
     });
 
-    ipcMain.on('discordrpc-status', async(_, status) => {
-        logger.info(`DiscordRPC is set to ${status == "true" ? "enabled" : "disabled"}.`);
-        if(status == "true") {
-            DiscordPresence.start();
-        } else if(DiscordPresence.started && status == "false") {
-            DiscordPresence.stop();
-        }
-    });
-
-    ipcMain.on('discordrpc-update', async (_, newDetails) => {
-        logger.info("Updating DiscordRPC.");
-        DiscordPresence.updateActivity(newDetails);
-    });
-
     // Opens links in external browser instead of opening them in the Electron app.
     mainWindow.webContents.setWindowOpenHandler((edata:any) => {
         shell.openExternal(edata.url);
@@ -66,7 +51,7 @@ async function createWindow() {
     
     // Devtools flag
     if(process.argv.includes("--devtools")) { 
-        logger.info("Opening devtools."); 
+        logger.info("--devtools flag passed. Opening devtools.."); 
         mainWindow.webContents.openDevTools(); 
     }
 
@@ -76,6 +61,7 @@ async function createWindow() {
 }
 
 app.on("ready", async () => {
+    logger.info("Enhanced version: v" + Updater.getCurrentVersion());
     logger.info("Running on NodeJS version: " + process.version);
     logger.info("Running on Electron version: v" + process.versions.electron);
     logger.info("Running on Chromium version: v" + process.versions.chrome);
@@ -120,19 +106,34 @@ app.on("window-all-closed", () => {
 
 app.on('browser-window-created', (_, window) => {
     window.webContents.on('before-input-event', (event:any, input:any) => {
-        // Opens Devtools on Ctrl + Shift + I
-        if (input.control && input.shift && input.key === 'I') {
-            window.webContents.toggleDevTools();
-            event.preventDefault();
-        }
-
-        // implements zooming in/out using shortcuts (ctrl =, ctrl -)
-        if (input.control && input.key === '=') {
-            mainWindow.webContents.zoomFactor += 0.1;
-            event.preventDefault();
-        } else if (input.control && input.key === '-') {
-            mainWindow.webContents.zoomFactor -= 0.1;
-            event.preventDefault();
+        switch (true) {
+            // Opens Devtools on Ctrl + Shift + I
+            case input.control && input.shift && input.key === 'I':
+                window.webContents.toggleDevTools();
+                event.preventDefault();
+                break;
+    
+            // Toggles fullscreen on F11
+            case input.key === 'F11':
+                window.setFullScreen(!window.isFullScreen());
+                event.preventDefault();
+                break;
+    
+            // Implements zooming in/out using shortcuts (Ctrl + =, Ctrl + -)
+            case input.control && input.key === '=':
+                mainWindow.webContents.zoomFactor += 0.1;
+                event.preventDefault();
+                break;
+            case input.control && input.key === '-':
+                mainWindow.webContents.zoomFactor -= 0.1;
+                event.preventDefault();
+                break;
+    
+            // Implements reload on Ctrl + R
+            case input.control && input.key === 'r':
+                mainWindow.reload();
+                event.preventDefault();
+                break;
         }
     });
 });

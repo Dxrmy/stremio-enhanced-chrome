@@ -68,3 +68,9 @@ This should've been part of v0.7 tbh, but I rushed the previous release for no r
 **Notes:**
 - This update has only been tested on Windows. I do not currently have access to a Mac but may create a macOS Virtual Machine for testing in the near future.
 - Since this project now uses [Stremio Web v5](https://web.stremio.com/), this means most, if not all, previous themes and plugins are no longer compatible and will require an update. This is because in [Stremio Web v5](https://web.stremio.com/), the UI has different structure, classes and ids are different, etc. So far I've only updated [Amoled theme](https://github.com/REVENGE977/StremioAmoledTheme) and [SlashToSearch](https://github.com/REVENGE977/SlashToSearch) to work on this version. I'll work on updating [BetterEpisodeList](https://github.com/REVENGE977/BetterEpisodeList) soon.
+
+## Update v0.9
+- **Improved Discord Rich Presence:**
+  - Now works even if you launch Stremio Enhanced first then you launch Discord.
+  - Now shows the watching status type instead of playing if you're watching something.
+- **Custom update modal:** Now displays a custom new update dialog that shows release notes on new updates.

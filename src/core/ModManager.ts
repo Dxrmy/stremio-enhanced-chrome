@@ -171,6 +171,7 @@ class ModManager {
         if (installedItemMetaData && Object.keys(installedItemMetaData).length > 0) {
             let updateUrl = installedItemMetaData.updateUrl;
             if(updateUrl) {
+                if(updateUrl == "none") return this.logger.info(`No update URL is provided in the metadata of ${pluginOrTheme} (${installedItemMetaData.name})`);
                 let request = await fetch(updateUrl);
                 let response = await request.text();
                 
