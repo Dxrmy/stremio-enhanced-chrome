@@ -144,4 +144,8 @@ If you'd like to go the extra mile, you can also support me by sponsoring the pr
 ## 🚨 Important Notice
 **This project is not affiliated in any way with Stremio.**
 
+- **This project** is licensed under the MIT License.
+- **Stremio Service** is bundled in certain releases of this project and is licensed under the GPL-2.0 License. [You can find the source code for Stremio Service here.](https://github.com/Stremio/stremio-service)
+
+
 <p align="center">💻 Developed with ❤️ by <a href="https://github.com/REVENGE977">REVENGE977</a> | 📜 Licensed under MIT</p>
