@@ -65,7 +65,7 @@ Stremio Enhanced is an Electron-based [Stremio](https://www.stremio.com/) client
 - **Plugins** – Extend Stremio’s functionality with JavaScript plugins for more features.
   - Example: **AniSkip Integration** – A plugin to integrate [AniSkip](https://github.com/aniskip) to autoskip anime openings and endings.
    ![aniskip](./images/aniskipplugin.png)
-   *(This plugin is still work-in-progress and not yet released. Stay tuned for more updates.)*
+   *(This plugin is still under testing but can be found in [stremio-aniskip](https://github.com/REVENGE977/stremio-aniskip).)*
 
 - **Built-in Toggleable Discord Rich Presence** – Show what you're watching on Discord with an easy-to-toggle Rich Presence feature.  
   ![discordpresence](./images/discordrichpresence.png)   
