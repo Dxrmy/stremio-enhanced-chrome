@@ -10,6 +10,8 @@ import DiscordPresence from "./utils/DiscordPresence";
 import { getAboutCategoryTemplate } from "./components/about-category/aboutCategory";
 import { getDefaultThemeTemplate } from "./components/default-theme/defaultTheme";
 import logger from "./utils/logger";
+import { join } from "path";
+import { pathToFileURL } from "url";
 
 window.addEventListener("load", async () => {
     intializeUserSettings();
@@ -102,7 +104,7 @@ window.addEventListener("load", async () => {
             
             // add themes to the settings
             themesList.forEach(theme => {
-                let readMetaData = Helpers.extractMetadataFromFile(`${properties.themesPath}\\${theme}`);
+                let readMetaData = Helpers.extractMetadataFromFile(join(properties.themesPath, theme));
                 
                 if (readMetaData && Object.keys(readMetaData).length > 0) {
                     if(readMetaData.name.toLowerCase() != "default") Settings.addItem("theme", theme, readMetaData);
@@ -112,7 +114,7 @@ window.addEventListener("load", async () => {
         
         // add plugins to the settings
         pluginsList.forEach(plugin => {
-            let readMetaData = Helpers.extractMetadataFromFile(`${properties.pluginsPath}\\${plugin}`);
+            let readMetaData = Helpers.extractMetadataFromFile(join(properties.pluginsPath, plugin));
             if (readMetaData && Object.keys(readMetaData).length > 0) Settings.addItem("plugin", plugin, readMetaData);
         })
         
@@ -140,14 +142,14 @@ function applyUserTheme() {
     if(localStorage.getItem("currentTheme") != null) {
         let currentTheme = localStorage.getItem("currentTheme");
         
-        if(currentTheme != "Default" && existsSync(`${properties.themesPath}\\${currentTheme}`)) {
+        if(currentTheme != "Default" && existsSync(join(properties.themesPath, currentTheme))) {
             if(document.getElementById("activeTheme")) document.getElementById("activeTheme").remove();
+            const themePath = join(properties.themesPath, currentTheme);
 
             let themeElement = document.createElement('link');
             themeElement.setAttribute("id", "activeTheme");
             themeElement.setAttribute("rel", "stylesheet");
-            themeElement.setAttribute("href", `${properties.themesPath}\\${currentTheme}`);
-
+            themeElement.setAttribute("href", pathToFileURL(themePath).toString());
             document.head.appendChild(themeElement);
         } else {
             localStorage.setItem("currentTheme", "Default");

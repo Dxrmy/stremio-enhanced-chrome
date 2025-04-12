@@ -119,9 +119,42 @@ class StremioService {
                 installationPath = join('/Applications', 'StremioService.app', 'Contents', 'MacOS', 'stremio-service');
                 break;
             case 'linux':
-                installationPath = existsSync('/usr/local/bin/stremio-service') ? '/usr/local/bin/stremio-service' :
-                                existsSync('/usr/bin/stremio-service') ? '/usr/bin/stremio-service' :
-                                join(process.env.HOME || '', 'bin', 'stremio-service');
+                const standardPaths = [
+                    '/usr/local/bin/stremio-service',
+                    '/usr/bin/stremio-service',
+                    join(process.env.HOME || '', 'bin', 'stremio-service')
+                ];
+            
+                for (const path of standardPaths) {
+                    if (existsSync(path)) {
+                        installationPath = path;
+                        break;
+                    }
+                }
+            
+                // If not found in standard paths, check for Flatpak installation
+                if (!installationPath) {
+                    try {
+                        const execSync = require('child_process').execSync;
+                        const flatpakPath = execSync('which flatpak').toString().trim();
+            
+                        if (flatpakPath) {
+                            // Check if the Stremio Service Flatpak is installed
+                            const installed = execSync('flatpak list --app').toString();
+                            if (installed.includes('com.stremio.Service')) {
+                                const flatpakInstallPath = execSync('flatpak info --show-location com.stremio.Service')
+                                    .toString().trim();
+            
+                                const flatpakExecutable = join(flatpakInstallPath, 'files', 'bin', 'stremio-service');
+                                if (existsSync(flatpakExecutable)) {
+                                    installationPath = flatpakExecutable;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        this.logger.error("Flatpak check failed: " + e.message);
+                    }
+                }
                 break;
             default:
                 this.logger.error('Unsupported operating system');

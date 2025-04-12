@@ -10,7 +10,7 @@ function applyTheme(theme) {
         const themeElement = document.createElement("link");
         themeElement.id = "activeTheme";
         themeElement.rel = "stylesheet";
-        themeElement.href = `{{ themesPath }}\\\\${theme}`;
+        themeElement.href = `{{ themesPath }}/${theme}`;
 
         document.head.appendChild(themeElement);
     }

@@ -1,9 +1,10 @@
 import { readFileSync } from 'fs';
+import { pathToFileURL } from 'url';
 import Properties from '../../core/Properties';
 
 export function getApplyThemeTemplate() {
-    let template = readFileSync(__dirname + '/apply-theme.js', 'utf8');
+    const template = readFileSync(__dirname + '/apply-theme.js', 'utf8');
+    const themeBaseURL = pathToFileURL(Properties.themesPath).toString();
 
-    return template
-        .replace("{{ themesPath }}", Properties.themesPath.replace(/\\/g, "\\\\"));
+    return template.replace("{{ themesPath }}", themeBaseURL);
 }

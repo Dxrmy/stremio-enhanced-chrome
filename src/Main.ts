@@ -7,6 +7,8 @@ import Properties from "./core/Properties";
 import logger from "./utils/logger";
 import StremioService from "./utils/StremioService";
 
+app.setName("stremio-enhanced");
+
 let mainWindow: BrowserWindow | null;
 
 app.commandLine.appendSwitch('use-angle', 'gl'); // Uses OpenGL for rendering. Having it on OpenGL enables the audio tracks menu in the video player
@@ -66,11 +68,25 @@ app.on("ready", async () => {
     logger.info("Running on Electron version: v" + process.versions.electron);
     logger.info("Running on Chromium version: v" + process.versions.chrome);
 
+    logger.info("User data path: " + app.getPath("userData"));
+    logger.info("Themes path: " + Properties.themesPath);
+    logger.info("Plugins path: " + Properties.pluginsPath);
+
     try {
-        if(!existsSync(`${process.env.APPDATA}\\stremio-enhanced`)) mkdirSync(`${process.env.APPDATA}\\stremio-enhanced`);
-        if(!existsSync(Properties.themesPath)) mkdirSync(Properties.themesPath);
-        if(!existsSync(Properties.pluginsPath)) mkdirSync(Properties.pluginsPath);
-    }catch {}
+        const basePath = Properties.enhancedPath;
+    
+        if (!existsSync(basePath)) {
+            mkdirSync(basePath, { recursive: true });
+        }
+        if (!existsSync(Properties.themesPath)) {
+            mkdirSync(Properties.themesPath, { recursive: true });
+        }
+        if (!existsSync(Properties.pluginsPath)) {
+            mkdirSync(Properties.pluginsPath, { recursive: true });
+        }
+    } catch (err) {
+        logger.error("Failed to create necessary directories: " + err);
+    }
     
     if(!process.argv.includes("--no-stremio-service")) {
         const stremioServicePath = StremioService.checkExecutableExists();

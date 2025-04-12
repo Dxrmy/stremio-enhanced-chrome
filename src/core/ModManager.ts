@@ -7,13 +7,14 @@ import MetaData from "../interfaces/MetaData";
 import { getLogger } from "../utils/logger";
 import Properties from "./Properties";
 import { getApplyThemeTemplate } from "../components/apply-theme/applyTheme";
+import { join } from "path";
 
 class ModManager {
     private static logger = getLogger("ModManager");
     
     public static loadPlugin(pluginName:string) {
         if(document.getElementById(pluginName)) return;
-        let plugin = readFileSync(`${Properties.pluginsPath}\\${pluginName}`, "utf-8");
+        let plugin = readFileSync(join(properties.pluginsPath, pluginName), "utf-8");
         let script = document.createElement("script");
         script.innerHTML = plugin
         script.id = pluginName
@@ -77,23 +78,44 @@ class ModManager {
         })
     }
     
-    
     public static openThemesFolder() {
         helpers.waitForElm("#openthemesfolderBtn").then(() => {
-            let button = document.getElementById("openthemesfolderBtn");
-            button.addEventListener("click", () => {
-                exec(`start "" "${Properties.themesPath}"`);
-            })
-        })
+            const button = document.getElementById("openthemesfolderBtn");
+            button?.addEventListener("click", () => {
+                this.openFolder(Properties.themesPath);
+            });
+        });
     }
-    
+
     public static openPluginsFolder() {
         helpers.waitForElm("#openpluginsfolderBtn").then(() => {
-            let button = document.getElementById("openpluginsfolderBtn");
-            button.addEventListener("click", () => {
-                exec(`start "" "${Properties.pluginsPath}"`);
-            })
-        })
+            const button = document.getElementById("openpluginsfolderBtn");
+            button?.addEventListener("click", () => {
+                this.openFolder(Properties.pluginsPath);
+            });
+        });
+    }
+
+    private static openFolder(folderPath: string) {
+        let command: string;
+
+        switch (process.platform) {
+            case "win32":
+                command = `start "" "${folderPath}"`;
+                break;
+            case "darwin":
+                command = `open "${folderPath}"`;
+                break;
+            default:
+                command = `xdg-open "${folderPath}"`;
+                break;
+        }
+
+        exec(command, (error) => {
+            if (error) {
+                console.error(`Failed to open folder: ${folderPath}`, error);
+            }
+        });
     }
         
     public static scrollListener() {
@@ -165,8 +187,8 @@ class ModManager {
         if(itemFile.endsWith(".theme.css")) pluginOrTheme = "theme";
         else pluginOrTheme = "plugin";
 
-        let itemPath = `${pluginOrTheme == "theme" ? properties.themesPath : properties.pluginsPath}\\${itemFile}`;
-
+        const itemPath = join(pluginOrTheme === "theme" ? properties.themesPath : properties.pluginsPath, itemFile);
+        
         let installedItemMetaData:MetaData = helpers.extractMetadataFromFile(itemPath);
         if (installedItemMetaData && Object.keys(installedItemMetaData).length > 0) {
             let updateUrl = installedItemMetaData.updateUrl;
