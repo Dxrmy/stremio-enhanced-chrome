@@ -4,15 +4,17 @@
   "description": "Electron-based Stremio client with plugins and themes support.",
   "main": "./dist/main.js",
   "scripts": {
-    "build": "tsc && node ./copyComponents.js",
+    "dist": "tsc && node ./copyComponents.js",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "dev": "cls && npm run build && npx electron --log-level=3 ./dist/main.js --devtools",
-    "package-all": "npm run build && npx electron-packager ./ stremio-enhanced --overwrite --asar --platform=all --arch=x64 --prune=true --out=release-builds --icon=./images/icon.ico && npm run package-macos-arm",
-    "package-win": "npm run build && npx electron-packager ./ stremio-enhanced --overwrite --asar --platform=win32 --arch=x64 --prune=true --out=release-builds --icon=./images/icon.ico",
-    "package-macos": "npm run build && npx electron-packager ./ stremio-enhanced --overwrite --asar --platform=darwin --arch=x64 --prune=true --out=release-builds --icon=./images/icon.ico",
-    "package-linux": "npm run build && npx electron-packager ./ stremio-enhanced --overwrite --asar --platform=linux --arch=x64 --prune=true --out=release-builds --icon=./images/icon.ico",
-    "package-macos-arm": "npm run build && npx electron-packager ./ stremio-enhanced --overwrite --asar --platform=darwin --arch=arm64 --prune=true --out=release-builds --icon=./images/icon.ico"
+    "dev": "npm run dist && npx electron --log-level=3 ./dist/main.js --devtools",
+    "build": "npm run dist && electron-builder",
+    "build:linux:x64": "electron-builder --linux --x64",
+    "build:linux:arm64": "electron-builder --linux --arm64",
+    "build:mac:x64": "electron-builder --mac --x64",
+    "build:mac:arm64": "electron-builder --mac --arm64",
+    "build:win:x64": "electron-builder --win --x64",
+    "build:win": "electron-builder --win"
   },
   "repository": "https://github.com/REVENGE977/stremio-enhanced.git",
   "publish": {
@@ -22,13 +24,12 @@
   "author": "REVENGE",
   "license": "MIT",
   "devDependencies": {
-    "@electron/packager": "^18.3.6",
     "@types/discord-rpc": "^4.0.8",
     "@types/electron": "^1.6.10",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "electron": "^28.1.4",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "23.6.0",
     "eslint": "^7.32.0",
     "typescript": "^4.7.2"
   },
@@ -42,6 +43,9 @@
     "marked": "^15.0.7",
     "winston": "^3.11.0"
   },
+  "optionalDependencies": {
+    "dmg-license": "1.0.11"
+  },
   "files": [
     "static/**/*",
     "!**/node_modules/*",
@@ -53,25 +57,31 @@
     "appId": "com.revenge977.stremio-enhanced",
     "productName": "Stremio Enhanced",
     "asar": true,
-    "icon": "images/icon.ico",
+    "icon": "images/icon",
     "directories": {
       "output": "release-builds"
     },
     "publish": {
       "provider": "github",
       "owner": "REVENGE977",
-      "repo": "stremio-enhanced-community"
+      "repo": "stremio-enhanced"
     },
+    "asarUnpack": [
+      "**/register-scheme/build/Release/*.node",
+      "**/register-scheme/node-addon-api/src/node-api.target.mk"
+    ],
     "win": {
       "target": "nsis",
-      "compression": "maximum"
+      "compression": "maximum",
+      "icon": "images/icon.ico"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "images/icon.icns"
     },
     "linux": {
       "target": "AppImage",
-      "icon": "images"
+      "icon": "images/icon.png"
     }
   }
 }

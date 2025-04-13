@@ -79,11 +79,11 @@ You can download the latest version from [the releases tab](https://github.com/R
 2. Navigate to the project directory: `cd stremio-enhanced`
 3. Install dependencies: `npm install`
 4. Build the project: 
-    - For all platforms: `npm run package-all`
-    - For Windows: `npm run package-win`
-    - For Linux: `npm run package-linux`
-    - For macOS x86: `npm run package-macos`
-    - For macOS ARM: `npm run package-macos-arm`
+    - For Windows: `npm run build:win`
+    - For Linux (x64): `npm run build:linux:x64`
+    - For Linux (arm64): `npm run build:linux:arm64`
+    - For macOS (x86): `npm run build:mac:x64`
+    - For macOS ARM: `npm run build:mac:arm64`
 
 ## 🎨 Themes and Plugins
 
