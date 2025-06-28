@@ -143,9 +143,9 @@ class ModManager {
         //     Settings.activeSection(shortcutsSection);
         // })
 
-        helpers.waitForElm(".side-menu-container-NG17D > div:nth-child(5) > div").then(() => {
+        helpers.waitForElm(".menu-xeE06 > div:nth-child(5) > div").then(() => {
             let enhanced = document.getElementById('enhanced');
-            let enhancedNav = document.querySelector('.side-menu-container-NG17D > div:nth-child(5) > div');
+            let enhancedNav = document.querySelector('.menu-xeE06 > div:nth-child(5) > div');
 
             enhancedNav.addEventListener("click", () => {
                 document.querySelector("#enhanced > div").scrollIntoView({

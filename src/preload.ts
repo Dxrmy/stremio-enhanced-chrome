@@ -171,9 +171,6 @@ function writeAbout() {
         const checkForUpdatesOnStartup = localStorage.getItem("checkForUpdatesOnStartup") == "true";
         const discordrichpresence = localStorage.getItem("discordrichpresence") == "true";
 
-        const aboutContainer = document.createElement("div");
-        aboutContainer.innerHTML = getAboutCategoryTemplate(currentVersion, checkForUpdatesOnStartup, discordrichpresence);
-
-        document.querySelector(`#enhanced > div:nth-child(4)`).appendChild(aboutContainer);
+        document.querySelector(`#enhanced > div:nth-child(4)`).innerHTML += getAboutCategoryTemplate(currentVersion, checkForUpdatesOnStartup, discordrichpresence);
     })
 }

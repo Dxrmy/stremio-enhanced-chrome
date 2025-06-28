@@ -16,4 +16,12 @@
 - [x] In-app patch notes when an update is available.
 - [ ] Support having options for plugins. 
 - [ ] Improve Update system: auto update so user doesn't have to download anything manually.
+- [ ] Auto download Stremio Service for the user if an installation is not detected.
 - [ ] Support addons links by opening directly: instead of having the user copy and paste links. 
+- [ ] In-app plugins/themes list to browse and find new plugins/themes.
+- [ ] Plugin idea: categories in library.
+- [ ] Features from Zaarrg/stremio-community-v5
+  - [ ] MPV support
+  - [ ] Thumbnail preview
+  - [ ] Upscale model support
+  - [ ] Native playback

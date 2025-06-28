@@ -30,7 +30,7 @@ function applyTheme(theme) {
                 currentThemeElement.style.backgroundColor = "var(--secondary-accent-color)";
             }
 
-            currentThemeElement.firstElementChild.innerText = "Apply";
+            currentThemeElement.innerText = "Apply";
         }
     }
 
@@ -48,7 +48,7 @@ function applyTheme(theme) {
             newThemeElement.style.backgroundColor = "var(--overlay-color)";
         }
 
-        newThemeElement.firstElementChild.innerText = "Applied";
+        newThemeElement.innerText = "Applied";
     }
 
     console.log(`${theme} applied!`);

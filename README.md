@@ -4,11 +4,13 @@
 	</a>
 	<h1 align="center">Stremio Enhanced</h1>
 	<p align="center">
-		<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/REVENGE977/stremio-enhanced/total?style=for-the-badge&color=%237B5BF5">
+		<a href="https://github.com/REVENGE977/stremio-enhanced/releases/latest">
+			<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/REVENGE977/stremio-enhanced/total?style=for-the-badge&color=%237B5BF5">
+		</a>
 		<a href="https://github.com/REVENGE977/stremio-enhanced/stargazers">
 			<img src="https://img.shields.io/github/stars/REVENGE977/stremio-enhanced.svg?style=for-the-badge&color=%237B5BF5" alt="stargazers">
 		</a>
-		<a href="https://github.com/REVENGE977/stremio-enhanced-community/releases/latest">
+		<a href="https://github.com/REVENGE977/stremio-enhanced/releases/latest">
 			<img src="https://img.shields.io/github/v/release/REVENGE977/stremio-enhanced?label=Latest%20Release&style=for-the-badge&color=%237B5BF5" alt="Latest Version">
 		</a>
 		<br>
@@ -44,6 +46,8 @@
 - [📜 Creating Your Own Plugin](#-creating-your-own-plugin)
 - [🎨 Creating Your Own Theme](#-creating-your-own-theme)
 - [🐛 Known Issues](#-known-issues)
+- [📃 Todo List](#-todo-list)
+- [🔗 Discord Server](#-discord-server)
 - [⭐ Support the Project](#-support-the-project)
 - [📊 Repository Stats](#-repository-stats)
 - [🚨 Important Notice](#-important-notice)
@@ -83,7 +87,7 @@ You can download the latest version from [the releases tab](https://github.com/R
     - For Linux (x64): `npm run build:linux:x64`
     - For Linux (arm64): `npm run build:linux:arm64`
     - For macOS (x86): `npm run build:mac:x64`
-    - For macOS ARM: `npm run build:mac:arm64`
+    - For macOS (arm64): `npm run build:mac:arm64`
 
 ## 🎨 Themes and Plugins
 
@@ -129,6 +133,16 @@ Create a file with a name ending in `.theme.css` and write your CSS modification
 
 ## 🐛 Known Issues
 - Subtitles are not available for **some** streams that have embedded subs. This seems to be an issue with either [Stremio Web](https://web.stremio.com/) or Stremio Service, as it also occurs in the browser. Subtitles do work fine for **most** streams though.
+
+## 📃 Todo List
+You can find the current list of tasks and planned features in the [todo.md](./todo.md) file.
+You can suggest ideas and give feature requests by either creating a feature request issue or by contacting me in my Discord server below.
+
+## 🔗 Discord Server
+You can contact me on my Discord server to discuss anything related to my projects, whether it'd be features you'd like to see in this project or to share ideas for themes/plugins you'd like to see made.
+
+[![Discord Server](https://dcbadge.limes.pink/api/server/https://discord.gg/jDsgcehrp7?theme=default-inverted&style=for-the-badge)](https://discord.gg/jDsgcehrp7)
+
 
 ## ⭐ Support the Project
 Consider giving the project a ⭐ star on GitHub! Your support helps more people discover it and keeps me motivated to improve it.

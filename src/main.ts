@@ -16,6 +16,7 @@ app.commandLine.appendSwitch('enable-gpu-rasterization'); // Uses GPU for render
 app.commandLine.appendSwitch('enable-zero-copy'); // Improves video decoding
 app.commandLine.appendSwitch('ignore-gpu-blocklist'); // Forces GPU acceleration
 app.commandLine.appendSwitch('disable-software-rasterizer'); // Ensures no software fallback
+app.commandLine.appendSwitch('disable-features', 'BlockInsecurePrivateNetworkRequests,PrivateNetworkAccessSendPreflights'); // Allow CORS requests to local network resources
 
 async function createWindow() {
     mainWindow = new BrowserWindow({
@@ -23,12 +24,15 @@ async function createWindow() {
             preload: join(__dirname, "preload.js"),
             webSecurity: false,
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
         },
         width: 1500,
         height: 850,
         icon: "./images/icon.ico",
-        backgroundColor: '#000000'
+        // transparent: false,
+        hasShadow: false,
+        // visualEffectState: "active",
+        backgroundColor: "#00000000",
     });
         
     mainWindow.setMenu(null);
@@ -54,11 +58,11 @@ async function createWindow() {
     // Devtools flag
     if(process.argv.includes("--devtools")) { 
         logger.info("--devtools flag passed. Opening devtools.."); 
-        mainWindow.webContents.openDevTools(); 
+        mainWindow.webContents.openDevTools({ mode: "detach" }); 
     }
 
     mainWindow.on('closed', () => {
-        StremioService.terminate();
+        if(!process.argv.includes("--no-stremio-service")) StremioService.terminate();
     });
 }
 

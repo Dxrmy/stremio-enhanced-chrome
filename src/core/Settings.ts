@@ -15,8 +15,8 @@ class Settings {
             // add section to settings panel
             const settingsPanel = document.querySelector(`[class^="sections-container-"]`);
 
-            const sectionClassName = document.querySelector(`[class^="section-container-"]`).className;
-            const titleClassName = document.querySelector(`[class^="section-title-"]`).className;
+            const sectionClassName = document.querySelector(`[class^="section-"]`).className;
+            const titleClassName = document.querySelector(`[class^="label-wXG3e"]`).className;
 
             const sectionContainer = document.createElement("div");
             sectionContainer.className = sectionClassName;
@@ -31,8 +31,8 @@ class Settings {
             settingsPanel.appendChild(sectionContainer);
 
             // add section to nav
-            Helpers.waitForElm(`[class^="side-menu-container-"]`).then(() => {
-                const nav = document.querySelector(`[class^="side-menu-container-"]`);
+            Helpers.waitForElm(`.menu-xeE06`).then(() => {
+                const nav = document.querySelector(`.menu-xeE06`);
                 const shortcutsNav = document.querySelector('[title="Shortcuts"]');
 
                 const enhancedNavContainer = document.createElement("div");
@@ -44,26 +44,21 @@ class Settings {
     }
 
     public static addCategory(title:string, sectionid:string, icon:string) {
-        Helpers.waitForElm(`[class^="section-container-"]`).then(() => {
+        Helpers.waitForElm(`[class^="sections-container-"]`).then(() => {
             this.logger.info("Adding category: " + title + " to section: " + sectionid);
-            const containerClass = document.querySelector(`[class^="section-container-"]`).className;
-            const categoryClass = document.querySelector(`[class^="section-category-container-"]`).className;
-            const categoryTitleClass = document.querySelector(`[class^="section-category-container-"] > [class^="label-"]`).className;
-            let categoryIconClass:any = document.querySelector(`[class^="section-category-container-"] > [class^="icon-"]`);
+            const categoryClass = document.querySelector(`.category-GP0hI`).className;
+            const categoryTitleClass = document.querySelector(`.label-N_O2v`).className;
+            let categoryIconClass:any = document.querySelector(`.icon-oZoyV`);
 
             if (categoryIconClass instanceof SVGElement) {
                 categoryIconClass = categoryIconClass.className.baseVal;
             } else if (categoryIconClass) {
                 categoryIconClass = categoryIconClass.className;
             }
-
             
             icon = icon.replace(`class="icon"`, `class="${categoryIconClass}"`);
 
             const section = document.getElementById(sectionid);
-
-            const containerDiv = document.createElement("div");
-            containerDiv.classList.add(containerClass);
 
             const categoryDiv = document.createElement("div");
             categoryDiv.classList.add(categoryClass);
@@ -72,11 +67,13 @@ class Settings {
             titleDiv.classList.add(categoryTitleClass);
             titleDiv.innerHTML = title;
 
-            categoryDiv.innerHTML += icon;
+            const headingDiv = document.createElement("div");
+            headingDiv.classList.add("heading-XePFl");
+            headingDiv.innerHTML += icon;
+            headingDiv.appendChild(titleDiv);
             
-            categoryDiv.appendChild(titleDiv);
-            containerDiv.appendChild(categoryDiv);
-            section.appendChild(containerDiv);
+            categoryDiv.appendChild(headingDiv);
+            section.appendChild(categoryDiv);
         })
     }
 
@@ -85,21 +82,21 @@ class Settings {
             const element = document.querySelector(query);
 
             const outerDiv = document.createElement("div");
-            outerDiv.classList.add("option-container-EGlcv");
+            outerDiv.classList.add("option-vFOAS");
 
-            const anchor = document.createElement("a");
-            anchor.setAttribute("tabindex", "0");
-            anchor.setAttribute("title", title);
-            anchor.classList.add("option-input-container-NPgpT", "button-container-ENMae", "button-container-zVLH6");
-            anchor.id = id;
-            
-            const innerDiv = document.createElement("div");
-            innerDiv.classList.add("label-FFamJ");
-            innerDiv.textContent = title;
+            const contentDiv = document.createElement("div");
+            contentDiv.classList.add("content-P2T0i");
 
-            anchor.appendChild(innerDiv);
+            const divElm = document.createElement("divElm");
+            divElm.setAttribute("tabindex", "0");
+            divElm.setAttribute("title", title);
+            divElm.classList.add("button-DNmYL", "button-container-zVLH6", "button");
+            divElm.id = id;
+            divElm.textContent = title;
 
-            outerDiv.appendChild(anchor);
+            contentDiv.appendChild(divElm);
+
+            outerDiv.appendChild(contentDiv);
 
             element.appendChild(outerDiv);
         })
@@ -149,11 +146,11 @@ class Settings {
     public static activeSection(element:Element) {
         for (let i = 0; i < 6; i++) {
             try {
-                document.querySelector(`.side-menu-container-NG17D > div:nth-child(${i})`).classList.remove("selected-yhdng"); 
+                document.querySelector(`.menu-xeE06 > div:nth-child(${i})`).classList.remove("selected-S7SeK"); 
             }catch {}
         }
 
-        element.classList.add("selected-yhdng");
+        element.classList.add("selected-S7SeK");
     }
 }
 
