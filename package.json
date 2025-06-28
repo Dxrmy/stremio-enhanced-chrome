@@ -1,6 +1,6 @@
 {
   "name": "stremio-enhanced",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Electron-based Stremio client with plugins and themes support.",
   "main": "./dist/main.js",
   "scripts": {
