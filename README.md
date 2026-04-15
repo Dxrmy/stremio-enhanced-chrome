@@ -1,169 +1,45 @@
-<p align="center">
-	<a href="https://stremio.com/">
-		<img src="https://github.com/REVENGE977/stremio-enhanced/raw/main/images/icon.ico" alt="Stremio Enhanced Icon">
-	</a>
-	<h1 align="center">Stremio Enhanced</h1>
-	<h5 align="center">This is a community project and is <b>NOT</b> affiliated with Stremio in any way.</h5>
-	<p align="center">
-		<a href="https://github.com/REVENGE977/stremio-enhanced/releases/latest">
-			<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/REVENGE977/stremio-enhanced/total?style=for-the-badge&color=%237B5BF5">
-		</a>
-		<a href="https://github.com/REVENGE977/stremio-enhanced/stargazers">
-			<img src="https://img.shields.io/github/stars/REVENGE977/stremio-enhanced.svg?style=for-the-badge&color=%237B5BF5" alt="stargazers">
-		</a>
-		<a href="https://github.com/REVENGE977/stremio-enhanced/releases/latest">
-			<img src="https://img.shields.io/github/v/release/REVENGE977/stremio-enhanced?label=Latest%20Release&style=for-the-badge&color=%237B5BF5" alt="Latest Version">
-		</a>
-		<br>
-		<a href="https://nodejs.org/">
-			<img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS">
-		</a>
-		<a href="https://www.typescriptlang.org/">
-			<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
-		</a>
-		<a href="https://www.electronjs.org/">
-			<img src="https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white" alt="Electron">
-		</a>
-		<a href="https://developer.mozilla.org/en-US/docs/Web/HTML">
-			<img src="https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white" alt="HTML">
-		</a>
-		<a href="https://developer.mozilla.org/en-US/docs/Web/CSS">
-			<img src="https://img.shields.io/badge/CSS-2965F1?&style=for-the-badge&logo=css3&logoColor=white" alt="CSS">
-		</a>
-	</p>
-</p>
+<div align="center">
+  <h1>Stremio Enhanced (Web)</h1>
+  <p><b>Bring the community power of Stremio Enhanced directly to your browser.</b></p>
+</div>
 
-## 📌 Table of Contents
-- [📌 Table of Contents](#-table-of-contents)
-- [❓ What is Stremio Enhanced?](#-what-is-stremio-enhanced)
-	- [🛠 How It Works](#-how-it-works)
-	- [✨ Features](#-features)
-- [📥 Downloads](#-downloads)
-- [⚙️ Build From Source](#️-build-from-source)
-- [🎨 Themes and Plugins](#-themes-and-plugins)
-	- [🖌️ Installing Themes](#️-installing-themes)
-	- [🛠️ Installing Plugins](#️-installing-plugins)
-	- [🌐 Community Plugins \& Themes](#-community-plugins--themes)
-- [❓ What Is the Difference Between Plugins and Addons?](#-what-is-the-difference-between-plugins-and-addons)
-- [🛠️ Creating your own theme/plugin](#️-creating-your-own-themeplugin)
-- [🐛 Known Issues](#-known-issues)
-- [📃 Todo List](#-todo-list)
-- [🔗 Discord Server](#-discord-server)
-- [⭐ Support the Project](#-support-the-project)
-- [📊 Repository Stats](#-repository-stats)
-- [🚨 Important Notice](#-important-notice)
+---
 
-## ❓ What is Stremio Enhanced?
+A Chrome Extension port of the popular [Stremio Enhanced](https://github.com/REVENGE977/stremio-enhanced) desktop client. It bridges the gap by injecting community themes and plugins directly into the official Stremio Web interface (`web.stremio.com`), without requiring you to install a separate Electron desktop application.
 
-Stremio Enhanced is an Electron-based [Stremio](https://www.stremio.com/) desktop client with support for plugins and themes. It enhances the default Stremio experience by adding more customization options and integrations.  
+## ✨ Features
+- **Community Themes**: Transform Stremio's look with AMOLED, Modern Glass, and more.
+- **Powerful Plugins**: Inject JavaScript plugins to add functionality like **AniSkip**, **TheIntroDB**, and **Addon Manager**.
+- **Inline Configuration**: Fully supports the `StremioEnhancedAPI` for plugins that require custom user settings (like API keys or feature toggles) via an intuitive popup interface.
+- **Zero Native Install**: No heavy Electron app required. Runs smoothly and securely via Chrome's Manifest V3 architecture.
 
-### 🛠 How It Works  
-- It runs the Stremio streaming server automatically in the background.
-- It loads [the web version of Stremio](https://web.stremio.com) within an Electron environment.
+## ⚙️ Installation
 
-### ✨ Features  
-- **Themes** – Customize the look and feel of Stremio with different themes to match your style.  
-  - Example: **Modern Glass Theme** – A modern glass-like aesthetic theme
-	![modernglasstheme](./images/modernglass_preview.png)
-	*(This community-made theme by Fxy6969 and can be found in [Stremio-Glass-Theme](https://github.com/Fxy6969/Stremio-Glass-Theme))*
+> **Note**: This extension is currently not available on the Chrome Web Store and must be sideloaded.
 
-- **Plugins** – Extend Stremio’s functionality with JavaScript plugins for more features.
-  - Example: **AniSkip Integration** – A plugin to integrate [AniSkip](https://github.com/aniskip) to autoskip anime openings and endings.
-   ![aniskip](./images/aniskipplugin.png)
-   *(This plugin is still under testing but can be found in [stremio-aniskip](https://github.com/REVENGE977/stremio-aniskip).)*
+1. Download or clone this repository to your local machine.
+2. Open Google Chrome (or any Chromium-based browser like Brave or Edge) and navigate to `chrome://extensions/`.
+3. Enable **Developer Mode** using the toggle switch in the top right corner.
+4. Click the **Load unpacked** button.
+5. Select the `stremio-enhanced-extension` folder.
 
-- **Built-in Toggleable Discord Rich Presence** – Show what you're watching on Discord with an easy-to-toggle Rich Presence feature.  
-  ![discordpresence](./images/discordrichpresence.png)   
+## 🛠️ Usage
 
+1. Navigate to [web.stremio.com](https://web.stremio.com).
+2. Click the **Stremio Enhanced** extension icon (the puzzle piece) in your browser toolbar.
+3. In the **Themes** and **Plugins** tabs, toggle the enhancements you want to use.
+4. If a plugin has a ⚙️ (cog) icon next to it, click it to access its specific settings (e.g., API keys or skip preferences).
+5. Click **Save & Refresh** to apply the changes instantly to your Stremio session.
 
-## 📥 Downloads
-You can download the latest version from [the releases tab](https://github.com/REVENGE977/stremio-enhanced/releases). 
+## 🔧 Technical Details
 
-If you're on **Windows**, you can also install via winget:
-```
-winget install REVENGE.StremioEnhanced
-```
+Because the official Stremio Web app employs strict Content Security Policies (CSP) and CORS restrictions, this extension uses a combination of advanced Manifest V3 techniques:
+- `declarativeNetRequest` to strip CSP headers on-the-fly.
+- A **Background Service Worker** to act as a proxy, fetching raw assets directly from GitHub.
+- `chrome.scripting.executeScript` to securely push plugins into the `MAIN` DOM world, mocking the `window.electron` environment that Desktop plugins expect.
 
-You can also install Stremio Service (which is required for Stremio Enhanced to stream content) via winget:
-```
-winget install Stremio.StremioService
-```
+## 🤝 Credits
 
-## ⚙️ Build From Source
-1. Clone the repository: `git clone https://github.com/REVENGE977/stremio-enhanced.git`
-2. Navigate to the project directory: `cd stremio-enhanced`
-3. Install dependencies: `npm install`
-4. Build the project with electron-builder: 
-    - For Windows: `npm run build:win`
-    - For Linux (x64): `npm run build:linux:x64`
-    - For Linux (arm64): `npm run build:linux:arm64`
-    - For macOS (x86): `npm run build:mac:x64`
-    - For macOS (arm64): `npm run build:mac:arm64`
-
-## 🎨 Themes and Plugins
-
-### 🖌️ Installing Themes
-1. Go to the settings and scroll down.
-2. Click on the "OPEN THEMES FOLDER" button.
-3. Move your theme into the opened folder.
-4. Restart Stremio Enhanced.
-5. You should see your theme in the settings with an option to apply it.
-
-### 🛠️ Installing Plugins
-1. Go to the settings and scroll down.
-2. Click on the "OPEN PLUGINS FOLDER" button.
-3. Move your plugin into the opened folder.
-4. Restart Stremio Enhanced or reload using <kbd>Ctrl</kbd> + <kbd>R</kbd>
-5. You should see your plugin in the settings with an option to enable it.
-
-![settings_screenshot](https://github.com/REVENGE977/stremio-enhanced/raw/main/images/settings_screenshot.png)
-
-### 🌐 Community Plugins & Themes
-You can also use the new community tab.
-
-1. Go to the settings and scroll down.
-2. Click on "Community Plugins & Themes"
-3. Here you can see and download the available submitted community-made themes and plugins.
-
-![community_tab](./images/communitytab.png)
-
-These plugins and themes are fetched from the [Stremio Enhanced Registry](https://github.com/REVENGE977/stremio-enhanced-registry) repository. If you're a developer you can submit your work there.
-
-## ❓ What Is the Difference Between Plugins and Addons?
-- **Addons** are available on the normal version of Stremio. They add catalogs and streams for Stremio.
-- **Plugins** add more functionality to Stremio, like new features.
-
-## 🛠️ Creating your own theme/plugin
-[You can read the wiki for information on how to create your own plugin/theme and how to submit it to the marketplace](https://github.com/REVENGE977/stremio-enhanced/wiki)
-
-## 🐛 Known Issues
-- Due to browser limitations, Blu-ray PGS embedded subtitles don't load. The only way to get around this is to play streams via external players such as VLC or MPV.
-- On macOS, you'll need to bypass Gatekeeper to run the app. This is because the app is not signed.
-
-## 📃 Todo List
-You can find the current list of tasks and planned features in the [todo.md](./todo.md) file.
-You can suggest ideas and give feature requests by either creating a feature request issue or by contacting me in my Discord server below.
-
-## 🔗 Discord Server
-You can contact me on my Discord server to discuss anything related to my projects, whether it'd be features you'd like to see in this project or to share ideas for themes/plugins you'd like to see made.
-
-[![Discord Server](https://dcbadge.limes.pink/api/server/https://discord.gg/jDsgcehrp7?theme=default-inverted&style=for-the-badge)](https://discord.gg/jDsgcehrp7)
-
-
-## ⭐ Support the Project
-Consider giving the project a ⭐ star on GitHub! Your support helps more people discover it and keeps me motivated to improve it.
-
-If you'd like to go the extra mile, you can also support me by sponsoring the project. Every contribution, big or small, is truly appreciated!
-
-[![Sponsor Me](https://img.shields.io/badge/Sponsor%20Me-%E2%9D%A4-red?style=for-the-badge)](https://github.com/sponsors/REVENGE977)
-
-## 📊 Repository Stats
-
-![Repo Stats](https://repobeats.axiom.co/api/embed/12eac6094c2e78fdff7110d7c850d15279f1cb05.svg "Repobeats analytics image")
-
-## 🚨 Important Notice
-**This project is not affiliated in any way with Stremio.**
-
-- **This project** is licensed under the MIT License.
-
-<p align="center">💻 Developed with ❤️ by <a href="https://github.com/REVENGE977">REVENGE977</a> | 📜 Licensed under MIT</p>
+*   [**Stremio Enhanced**](https://github.com/REVENGE977/stremio-enhanced) - The original desktop app created by **REVENGE977**.
+*   [**Plugin & Theme Registry**](https://github.com/REVENGE977/stremio-enhanced-registry) - The community hub for all the amazing customizations.
+*   Extension ported and maintained by **[Dxrmy](https://github.com/Dxrmy)**.
