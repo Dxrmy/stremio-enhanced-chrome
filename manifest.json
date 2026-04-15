@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Stremio Enhanced",
+  "version": "1.0.5",
+  "description": "Chrome extension port of Stremio Enhanced for web.stremio.com.",
+  "permissions": [
+    "storage",
+    "scripting",
+    "tabs",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://web.stremio.com/*",
+    "https://raw.githubusercontent.com/*",
+    "https://github.com/*",
+    "https://*.github.com/*",
+    "https://*.githubusercontent.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset_1",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://web.stremio.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}
