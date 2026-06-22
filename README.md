@@ -1,35 +1,17 @@
 # Stremio Enhanced (Web)
-	Bring the community power of Stremio Enhanced directly to your browser.
-	
-		
-		
-		<br>
-		
-		
-	
 
-##  Table of Contents
-- [ Table of Contents](#-table-of-contents)
-- [ What is Stremio Enhanced Chrome?](#-what-is-stremio-enhanced-chrome)
-- [ Features](#-features)
-- [ Installation](#-installation)
-- [️ Usage](#️-usage)
-- [ Technical Details](#-technical-details)
-- [ Credits](#-credits)
-- [⭐ Support the Project](#-support-the-project)
-- [ Important Notice](#-important-notice)
-
-##  What is Stremio Enhanced Chrome?
+Bring the community power of Stremio Enhanced directly to your browser.
 
 A Chrome Extension port of the popular [Stremio Enhanced](https://github.com/REVENGE977/stremio-enhanced) desktop client. It bridges the gap by injecting community themes and plugins directly into the official Stremio Web interface (`web.stremio.com`), without requiring you to install a separate Electron desktop application.
 
-##  Features
-- **Community Themes** – Transform Stremio's look with AMOLED, Modern Glass, and more.
-- **Powerful Plugins** – Inject JavaScript plugins to add functionality like **AniSkip**, **TheIntroDB**, and **Addon Manager**.
-- **Inline Configuration** – Fully supports user settings (like API keys or feature toggles) via an intuitive popup interface.
-- **Zero Native Install** – No heavy Electron app required. Runs smoothly and securely via Chrome's Manifest V3 architecture.
+## Features
 
-##  Installation
+- **Community Themes** - Transform Stremio's look with AMOLED, Modern Glass, and more.
+- **Powerful Plugins** - Inject JavaScript plugins to add functionality like **AniSkip**, **TheIntroDB**, and **Addon Manager**.
+- **Inline Configuration** - Fully supports user settings (like API keys or feature toggles) via an intuitive popup interface.
+- **Zero Native Install** - No heavy Electron app required. Runs smoothly and securely via Chrome's Manifest V3 architecture.
+
+## Installation
 
 > **Note**: This extension is currently not available on the Chrome Web Store and must be sideloaded.
 
@@ -39,34 +21,28 @@ A Chrome Extension port of the popular [Stremio Enhanced](https://github.com/REV
 4. Click the **Load unpacked** button.
 5. Select the `stremio-enhanced-extension` folder.
 
-## ️ Usage
+## Usage
 
 1. Navigate to [web.stremio.com](https://web.stremio.com).
 2. Click the **Stremio Enhanced** extension icon (the puzzle piece) in your browser toolbar.
 3. In the **Themes** and **Plugins** tabs, toggle the enhancements you want to use.
-4. If a plugin has a ️ (cog) icon next to it, click it to access its specific settings (e.g., API keys or skip preferences).
+4. If a plugin has a cog icon next to it, click it to access its specific settings (e.g., API keys or skip preferences).
 5. Click **Save & Refresh** to apply the changes instantly to your Stremio session.
 
-##  Technical Details
+## Technical Details
 
 Because the official Stremio Web app employs strict Content Security Policies (CSP) and CORS restrictions, this extension uses a combination of advanced Manifest V3 techniques:
 - `declarativeNetRequest` to strip CSP headers on-the-fly.
 - A **Background Service Worker** to act as a proxy, fetching raw assets directly from GitHub.
 - `chrome.scripting.executeScript` to securely push plugins into the `MAIN` DOM world.
 
-##  Credits
+## Credits
 
-*   [**Stremio Enhanced**](https://github.com/REVENGE977/stremio-enhanced) – The original desktop app created by **REVENGE977**.
-*   [**Plugin & Theme Registry**](https://github.com/REVENGE977/stremio-enhanced-registry) – The community hub for all the customizations.
+*   [**Stremio Enhanced**](https://github.com/REVENGE977/stremio-enhanced) - The original desktop app created by **REVENGE977**.
+*   [**Plugin & Theme Registry**](https://github.com/REVENGE977/stremio-enhanced-registry) - The community hub for all the customizations.
 *   Extension ported and maintained by **[Dxrmy](https://github.com/Dxrmy)**.
 
-## ⭐ Support the Project
-Consider giving the project a ⭐ star on GitHub! Your support helps more people discover it and keeps me motivated to improve it.
+## Important Notice
 
-[](https://github.com/sponsors/Dxrmy)
-
-##  Important Notice
-**This project is not affiliated in any way with Stremio.**  
+**This project is not affiliated in any way with Stremio.**
 - **This project** is licensed under the MIT License.
-
- Developed with ️ by <a href="https://github.com/Dxrmy">Dxrmy</a> |  Licensed under MIT
