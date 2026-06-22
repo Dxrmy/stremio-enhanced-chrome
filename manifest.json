@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Stremio Enhanced",
-  "version": "1.0.5",
+  "version": "1.1.5",
   "description": "Chrome extension port of Stremio Enhanced for web.stremio.com.",
   "permissions": [
     "storage",
