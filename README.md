@@ -1,15 +1,6 @@
 # Stremio Enhanced (Web)
 
-Bring the community power of Stremio Enhanced directly to your browser.
-
-A Chrome Extension port of the popular [Stremio Enhanced](https://github.com/REVENGE977/stremio-enhanced) desktop client. It bridges the gap by injecting community themes and plugins directly into the official Stremio Web interface (`web.stremio.com`), without requiring you to install a separate Electron desktop application.
-
-## Features
-
-- **Community Themes** - Transform Stremio's look with AMOLED, Modern Glass, and more.
-- **Powerful Plugins** - Inject JavaScript plugins to add functionality like **AniSkip**, **TheIntroDB**, and **Addon Manager**.
-- **Inline Configuration** - Fully supports user settings (like API keys or feature toggles) via an intuitive popup interface.
-- **Zero Native Install** - No heavy Electron app required. Runs smoothly and securely via Chrome's Manifest V3 architecture.
+I ported the [Stremio Enhanced](https://github.com/REVENGE977/stremio-enhanced) desktop app to a Chrome extension so you don't have to run the heavy Electron app. It injects community themes and plugins directly into the official Stremio Web interface (`web.stremio.com`).
 
 ## Installation
 
