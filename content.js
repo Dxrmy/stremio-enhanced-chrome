@@ -1,4 +1,4 @@
-// Stremio Enhanced: Content Script (v1.0.4)
+// Stremio Enhanced: Content Script (v1.2.0)
 
 (async function() {
   console.log('Stremio Enhanced: Starting content script...');

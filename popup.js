@@ -1,4 +1,4 @@
-// Stremio Enhanced Popup JS v1.0.8
+// Stremio Enhanced Popup JS v1.2.0
 
 const REGISTRY_URL = 'https://raw.githubusercontent.com/REVENGE977/stremio-enhanced-registry/main/registry.json';
 

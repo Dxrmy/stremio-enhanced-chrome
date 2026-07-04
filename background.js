@@ -1,4 +1,4 @@
-// Stremio Enhanced: Background Worker v1.0.7
+// Stremio Enhanced: Background Worker v1.2.0
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'APPLY_ENHANCEMENT') {
