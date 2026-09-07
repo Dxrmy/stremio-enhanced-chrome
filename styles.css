@@ -245,6 +245,21 @@ input:checked + .slider:before {
   border-color: #4354c5;
 }
 
+.config-select {
+  background: #15172b;
+  border: 1px solid #2a2d4b;
+  color: white;
+  padding: 6px;
+  border-radius: 4px;
+  max-width: 120px;
+  cursor: pointer;
+}
+
+.config-select:focus {
+  outline: none;
+  border-color: #4354c5;
+}
+
 /* About Tab Styles */
 .about-section {
   text-align: center;

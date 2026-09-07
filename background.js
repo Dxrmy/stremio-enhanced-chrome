@@ -1,9 +1,14 @@
-// Stremio Enhanced: Background Worker v1.2.0
+// Stremio Enhanced: Background Worker v1.2.1
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'APPLY_ENHANCEMENT') {
     const { url, assetType } = request;
-    const tabId = sender.tab.id;
+    const tabId = sender.tab?.id || request.tabId;
+
+    if (!tabId) {
+      sendResponse({ success: false, error: 'No valid tabId' });
+      return;
+    }
     
     console.log(`Stremio Enhanced: Background applying [${url}] to tab ${tabId}`);
 
@@ -17,18 +22,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           chrome.scripting.insertCSS({
             target: { tabId: tabId },
             css: codeText
-          });
+          }).catch(err => console.error('Stremio Enhanced: CSS insert error', err));
           sendResponse({ success: true });
         } else if (assetType === 'plugin') {
           
           // Apply Web-specific patches to community plugins designed for the Desktop app
-          if (url.includes('addon-manager')) {
+          if (url.includes('addon-manager') || url.includes('Sul-404')) {
             // Patch brittle Stremio Desktop DOM selectors to ones that exist on Stremio Web
             codeText = codeText.replace(
               'stremioHeaderInputs: \'[class*="selectable-inputs-container"]\'', 
               'stremioHeaderInputs: \'[class*="selectable-inputs-container"], [class*="dashboard-container"] > div > div\''
             );
-            // If it completely fails to find the header, just append the button to the body so it's always accessible
+            // If it completely fails to find the header, append the button to the body so it's always accessible
             codeText = codeText.replace(
               'if (!inputsContainer) return;', 
               'if (!inputsContainer) inputsContainer = document.body;'
@@ -74,16 +79,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               // 2. Setup the Core API for Settings Management
               if (!window.StremioEnhancedAPI_Core) {
                 window.StremioEnhancedAPI_Core = {
+                  _listeners: {},
                   getSetting: (p, k) => {
                     const raw = localStorage.getItem(`se_setting_${p}_${k}`);
-                    return raw !== null ? JSON.parse(raw) : undefined;
+                    return Promise.resolve(raw !== null ? JSON.parse(raw) : undefined);
+                  },
+                  getSettings: (p) => {
+                    const schemas = JSON.parse(localStorage.getItem('se_schemas') || '{}');
+                    const schema = schemas[p] || [];
+                    const result = {};
+                    schema.forEach(s => {
+                      const raw = localStorage.getItem(`se_setting_${p}_${s.key}`);
+                      result[s.key] = raw !== null ? JSON.parse(raw) : s.defaultValue;
+                    });
+                    return Promise.resolve(result);
                   },
                   saveSetting: (p, k, v) => {
                     localStorage.setItem(`se_setting_${p}_${k}`, JSON.stringify(v));
+                    if (window.StremioEnhancedAPI_Core._listeners[p]) {
+                      window.StremioEnhancedAPI_Core.getSettings(p).then(allSettings => {
+                        window.StremioEnhancedAPI_Core._listeners[p].forEach(cb => {
+                          try { cb(allSettings); } catch(e) { console.error(e); }
+                        });
+                      });
+                    }
+                    return Promise.resolve(true);
                   },
                   registerSettings: (p, schema) => {
                     const schemas = JSON.parse(localStorage.getItem('se_schemas') || '{}');
-                    // Add default values if not already set
                     schema.forEach(s => {
                       if (localStorage.getItem(`se_setting_${p}_${s.key}`) === null && s.defaultValue !== undefined) {
                          localStorage.setItem(`se_setting_${p}_${s.key}`, JSON.stringify(s.defaultValue));
@@ -91,47 +114,46 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     });
                     schemas[p] = schema;
                     localStorage.setItem('se_schemas', JSON.stringify(schemas));
-                  }
+                    return Promise.resolve(true);
+                  },
+                  onSettingsSaved: (p, cb) => {
+                    if (!window.StremioEnhancedAPI_Core._listeners[p]) {
+                      window.StremioEnhancedAPI_Core._listeners[p] = [];
+                    }
+                    window.StremioEnhancedAPI_Core._listeners[p].push(cb);
+                  },
+                  createPluginAPI: (baseName) => ({
+                    logger: {
+                      info: (msg) => console.log(`[${baseName}]`, msg),
+                      warn: (msg) => console.warn(`[${baseName}]`, msg),
+                      error: (msg) => console.error(`[${baseName}]`, msg)
+                    },
+                    info: (msg) => console.log(`[${baseName}]`, msg),
+                    warn: (msg) => console.warn(`[${baseName}]`, msg),
+                    error: (msg) => console.error(`[${baseName}]`, msg),
+                    getSetting: (key) => window.StremioEnhancedAPI_Core.getSetting(baseName, key),
+                    getSettings: () => window.StremioEnhancedAPI_Core.getSettings(baseName),
+                    saveSetting: (key, val) => window.StremioEnhancedAPI_Core.saveSetting(baseName, key, val),
+                    registerSettings: (schema) => window.StremioEnhancedAPI_Core.registerSettings(baseName, schema),
+                    onSettingsSaved: (cb) => window.StremioEnhancedAPI_Core.onSettingsSaved(baseName, cb),
+                    showAlert: (msg) => alert(msg),
+                    showPrompt: (title, msg, def) => prompt(`${title}\n${msg}`, def)
+                  })
                 };
               }
 
-              // 3. Create the per-plugin StremioEnhancedAPI proxy
-              const StremioEnhancedAPI = {
-                getSetting: (key) => window.StremioEnhancedAPI_Core.getSetting(pluginBaseName, key),
-                saveSetting: (key, val) => window.StremioEnhancedAPI_Core.saveSetting(pluginBaseName, key, val),
-                registerSettings: (schema) => window.StremioEnhancedAPI_Core.registerSettings(pluginBaseName, schema),
-                info: (msg) => console.log(`[${pluginBaseName}]`, msg),
-                warn: (msg) => console.warn(`[${pluginBaseName}]`, msg),
-                error: (msg) => console.error(`[${pluginBaseName}]`, msg),
-                showAlert: (msg) => alert(msg),
-                showPrompt: (title, msg, def) => prompt(`${title}\n${msg}`, def)
-              };
-
-              // 4. Inject and execute the plugin code
+              // 3. Execute the plugin code safely
               try {
                 console.log(`Stremio Enhanced: [Plugin] Executing ${pluginName}`);
-                const script = document.createElement('script');
-                script.textContent = `
-                  (function(StremioEnhancedAPI) {
-                    try {
-                      ${code}
-                    } catch (e) {
-                      console.error('Stremio Enhanced: [Plugin] Error inside ${pluginName}:', e);
-                    }
-                  })({
-                    getSetting: (key) => window.StremioEnhancedAPI_Core.getSetting("${pluginBaseName}", key),
-                    saveSetting: (key, val) => window.StremioEnhancedAPI_Core.saveSetting("${pluginBaseName}", key, val),
-                    registerSettings: (schema) => window.StremioEnhancedAPI_Core.registerSettings("${pluginBaseName}", schema),
-                    info: (msg) => console.log('["${pluginBaseName}"]', msg),
-                    warn: (msg) => console.warn('["${pluginBaseName}"]', msg),
-                    error: (msg) => console.error('["${pluginBaseName}"]', msg),
-                    showAlert: (msg) => alert(msg),
-                    showPrompt: (title, msg, def) => prompt(title + '\\n' + msg, def)
-                  });
-                `;
-                
-                document.documentElement.appendChild(script);
-                script.remove();
+                const api = window.StremioEnhancedAPI_Core.createPluginAPI(pluginBaseName);
+                const fn = new Function('StremioEnhancedAPI', `
+                  try {
+                    ${code}
+                  } catch (e) {
+                    console.error('Stremio Enhanced: [Plugin] Error inside ${pluginName}:', e);
+                  }
+                `);
+                fn(api);
               } catch (e) {
                 console.error(`Stremio Enhanced: Injection error for ${pluginName}:`, e);
               }

@@ -1,6 +1,9 @@
 // Stremio Enhanced: Content Script (v1.2.0)
 
 (async function() {
+  // Prevent duplicate plugin injection in nested iframes
+  if (window !== window.top) return;
+
   console.log('Stremio Enhanced: Starting content script...');
 
   // 1. Fetch preferences from storage

@@ -1,4 +1,4 @@
-// Stremio Enhanced Popup JS v1.2.0
+// Stremio Enhanced Popup JS v1.2.1
 
 const REGISTRY_URL = 'https://raw.githubusercontent.com/REVENGE977/stremio-enhanced-registry/main/registry.json';
 
@@ -192,7 +192,18 @@ function createCard(item, type, isEnabled, configData = null, tabId = null) {
           <span class="slider"></span>
         `;
         const checkbox = input.querySelector('input');
-        checkbox.addEventListener('input', async (e) => saveConfigValue(pluginBaseName, setting.key, e.target.checked, tabId));
+        checkbox.addEventListener('change', async (e) => saveConfigValue(pluginBaseName, setting.key, e.target.checked, tabId));
+      } else if (setting.type === 'select' && Array.isArray(setting.options)) {
+        input = document.createElement('select');
+        input.className = 'config-select';
+        setting.options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.value;
+          option.textContent = opt.label || opt.value;
+          if (String(opt.value) === String(currentValue)) option.selected = true;
+          input.appendChild(option);
+        });
+        input.addEventListener('change', async (e) => saveConfigValue(pluginBaseName, setting.key, e.target.value, tabId));
       } else {
         input = document.createElement('input');
         input.type = 'text';
@@ -220,14 +231,20 @@ function createCard(item, type, isEnabled, configData = null, tabId = null) {
 }
 
 async function saveConfigValue(plugin, key, value, tabId) {
-  if (!tabId) return;
-  await chrome.scripting.executeScript({
-    target: { tabId: tabId },
-    func: (p, k, v) => {
-      localStorage.setItem(`se_setting_${p}_${k}`, JSON.stringify(v));
-    },
-    args: [plugin, key, value]
-  });
+  if (tabId) {
+    await chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      world: 'MAIN',
+      func: (p, k, v) => {
+        if (window.StremioEnhancedAPI_Core) {
+          window.StremioEnhancedAPI_Core.saveSetting(p, k, v);
+        } else {
+          localStorage.setItem(`se_setting_${p}_${k}`, JSON.stringify(v));
+        }
+      },
+      args: [plugin, key, value]
+    });
+  }
   
   const saveBtn = document.getElementById('save-btn');
   saveBtn.textContent = 'Config Updated! Click to Refresh';
